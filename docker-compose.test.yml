@@ -1,9 +1,4 @@
 version: '3'
-
-networks:
-  integration-tests-example-test:
-    driver: bridge
-
 services:
   listd_tests:
     build:
@@ -12,19 +7,19 @@ services:
     volumes:
       - $PWD:/go/src/github.com/george-e-shaw-iv/integration-tests-example
     depends_on:
-      - db
+      - db1
     networks:
-      - integration-tests-example-test
-  db:
+      - db1-network
+  db1:
     image: postgres:11.1
-    ports:
-      - "5432:5432"
-    expose:
-      - "5432"
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: testdb
-    restart: on-failure
     networks:
-      - integration-tests-example-test
+      db1-network:
+        aliases:
+          - db
+networks:
+  db1-network:
+
